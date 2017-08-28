@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const production = process.env.NODE_ENV === 'production';
 const htmlWebpackPlugin = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const autoprefixer = require('autoprefixer');

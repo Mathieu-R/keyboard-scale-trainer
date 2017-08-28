@@ -6,7 +6,7 @@ module.exports = {
         front: 8080 // port for devServer
     },
     entry: {
-        front: [path.resolve(__dirname, 'src/index.js')], // entrypoint for front js file
+        front: [path.resolve(__dirname, 'src/app.js')], // entrypoint for front js file
         back: false // entrypoint for server js file
     },
     vendor: ['vue'],
