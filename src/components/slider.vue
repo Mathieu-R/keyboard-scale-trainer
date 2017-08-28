@@ -1,7 +1,8 @@
 <template>
   <div class="slider">
-    <div class="slider-controller"></div>
-    <div class="slider-input"></div>
+    <div class="slider-input">
+      <div class="slider-controller"></div>
+    </div>
   </div>
 
 </template>
@@ -38,7 +39,13 @@ export default {
 
       this.currentX = evt.pageX || evt.touches[0].pageX;
       const delta = this.currentX - this.startX;
-      console.log(this.sliderInputBCR.width)
+      console.log(delta);
+
+      if (Math.abs(delta) < 0 || Math.abs(delta) > this.sliderInputBCR.width - 10) {
+        this.dragging = false;
+        return;
+      }
+
       this.sliderController.style.transform = `translate(${delta}px, -50%)`
     },
 
@@ -49,9 +56,9 @@ export default {
   mounted() {
     this.sliderController = this.$el.querySelector('.slider-controller');
 
-    this.sliderController.addEventListener('mousestart', this.onSwipeStart);
+    this.sliderController.addEventListener('mousedown', this.onSwipeStart);
     this.sliderController.addEventListener('mousemove', this.onSwipeMove);
-    this.sliderController.addEventListener('mouseend', this.onSwipeEnd);
+    this.sliderController.addEventListener('mouseup', this.onSwipeEnd);
 
     this.sliderController.addEventListener('touchstart', this.onSwipeStart);
     this.sliderController.addEventListener('touchmove', this.onSwipeMove);
@@ -76,7 +83,6 @@ export default {
 
 <style lang="scss">
   .slider {
-    position: relative;
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
@@ -84,6 +90,7 @@ export default {
     &-controller {
       position: absolute;
       top: 50%;
+      left: 0;
       border-radius: 50%;
       background: #FFF;
       height: 20px;
@@ -93,6 +100,7 @@ export default {
     }
 
     &-input {
+      position: relative;
       width: 95%;
       height: 15px;
       background: rgba(255, 255, 255, 0.2);
