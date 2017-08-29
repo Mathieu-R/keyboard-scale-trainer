@@ -1,19 +1,17 @@
 <template>
   <div class="presentation">
-      <p class="presentation-value">
-        <transition
-          @enter="onScaleEnter"
-          @leave="onScaleLeave"
-        >
-          <div class="presentation-value--scale" v-show="showScale">{{scale}}</div>
-        </transition>
-        <transition name="fade">
-          <div class="presentation-value--fullchord" v-show="showChords">
-            <span class="presentation-value--chord">{{chord}}</span>
-            <span class="presentation-value--alteration">{{alteration}}</span>
-          </div>
-        </transition>
-      </p>
+    <transition
+      @enter="onScaleEnter"
+      @leave="onScaleLeave"
+    >
+      <div class="presentation--scale" v-show="showScale">{{scale}}</div>
+    </transition>
+    <transition name="fade">
+      <div class="presentation--fullchord" v-show="showChords">
+        <span class="presentation--chord">{{chord}}</span>
+        <span class="presentation--alteration">{{alteration}}</span>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -28,10 +26,20 @@ export default {
   },
   methods: {
     onScaleEnter(el, done) {
-      const elBCR = el.getBoundingClientRect();
-      const {top, left} = elBCR;
+      const first = el.getBoundingClientRect();
+
+      el.style.position = 'fixed';
+      el.style.top = '5px';
+      el.style.right = '5px';
+      el.style.transform = 'scale(0.5)';
+      const last = el.getBoundingClientRect();
+
+      const deltaX = first.right - last.right;
+      const deltaY = first.top - last.top;
+      const deltaScale = first.width / last.width;
+
       el.style.transform = `scale(0.5, 0.5) translate(${-left + 5}px, ${-top + 5}px)`;
-      el.style.opacity = 0.5;
+      el.style.opacity = 0.7;
       done();
     },
 
@@ -51,40 +59,38 @@ export default {
     width: 100%;
     height: 100%;
 
-    &-value {
+    &--scale {
       color: #FFF;
+      opacity: 1;
+      font-size: 8em;
+      transition:
+        opacity 0.3s cubic-bezier(0, 0, 0.3, 1),
+        transform 1s cubic-bezier(0, 0, 0.3, 1);
+    }
 
-      &--scale {
-        opacity: 1;
-        font-size: 8em;
-        transition:
-          opacity 0.3s cubic-bezier(0, 0, 0.3, 1),
-          transform 1s cubic-bezier(0, 0, 0.3, 1);
-      }
+    &--fullchord {
+      color: #FFF;
+      display: flex;
+      align-items: end;
+      animation-name: bouceIn;
+      animation-duration: 0.5s;
+      animation-iteration-count: 1;
+      animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    }
 
-      &--fullchord {
-        display: flex;
-        align-items: end;
-        animation-name: bouceIn;
-        animation-duration: 0.5s;
-        animation-iteration-count: 1;
-        animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
-      }
+    &--chord {
+      font-size: 8em;
+    }
 
-      &--chord {
-        font-size: 8em;
-      }
-
-      &--alteration {
-        font-size: 3em;
-        font-style: italic
-      }
+    &--alteration {
+      font-size: 3em;
+      font-style: italic
     }
   }
 
   .fade-leave {
     opacity: 1;
-    transform: scale(1, 1);
+    transform: scale(1);
   }
 
   .fade-leave-active {
@@ -99,15 +105,15 @@ export default {
   @keyframes bouceIn {
     0% {
       opacity: 0;
-      transform: scale(0.2, 0.2);
+      transform: scale(0.2);
     }
     75% {
       opacity: 1;
-      transform: scale(1.1, 1.1);
+      transform: scale(1.1);
     }
     100% {
       opacity: 1;
-      transform: scale(1, 1);
+      transform: scale(1);
     }
   }
 </style>
