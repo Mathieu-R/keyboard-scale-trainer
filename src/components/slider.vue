@@ -1,5 +1,8 @@
 <template>
   <div class="slider">
+    <div class="slider-time-between">
+      <span>Time between : <span class="slider-time-between__value">{{currentX ? currentDuration: duration}}s</span></span>
+    </div>
     <div class="slider-input">
       <div class="slider-controller"></div>
     </div>
@@ -10,20 +13,32 @@
 <script>
 export default {
   props: {
-    duration: Number
+    duration: Number,
+    minRange: Number,
+    maxRange: Number
   },
   data() {
     return {
       sliderController: null,
       dragging: false,
-      startX: null,
       currentX: null,
-      sliderInputBCR: null
+      sliderInputBCR: null,
+      partsWidth: 0
+    }
+  },
+  computed: {
+    currentDuration() {
+      return Math.floor(this.currentX / this.partsWidth) + 1;
     }
   },
   methods: {
     onResize() {
       this.sliderInputBCR = this.$el.querySelector('.slider-input').getBoundingClientRect();
+      this.partsWidth = this.sliderInputBCR.width / (this.maxRange - this.minRange);
+      const position = (this.duration - 1) * this.partsWidth;
+
+      // base position according to duration
+      this.sliderController.style.transform = `translate(${position}px, -50%)`;
     },
 
     onSwipeStart(evt) {
@@ -36,7 +51,10 @@ export default {
         return;
       }
 
-      this.currentX = evt.pageX || evt.touches[0].pageX;
+      const position = evt.pageX || evt.touches[0].pageX;
+
+      this.currentX =
+        position < 0 || position > this.sliderInputBCR.width - 10 ? this.currentX : position;
     },
 
     onSwipeEnd(evt) {
@@ -50,7 +68,7 @@ export default {
         return;
       }
 
-      if (this.currentX < 0 || this.currentX > this.sliderInputBCR.width - 10) {
+      if (!this.dragging) {
         return;
       }
 
@@ -89,8 +107,20 @@ export default {
 <style lang="scss">
   .slider {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     margin-bottom: 10px;
+
+    &-time-between {
+      font-size: 22px;
+      margin: 5px 0;
+      text-align: center;
+      opacity: 0.5;
+
+      &__value {
+        font-weight: bold;
+      }
+    }
 
     &-controller {
       position: absolute;

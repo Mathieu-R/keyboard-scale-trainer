@@ -2,7 +2,7 @@
   <div class="main">
     <presentation :value="currentValue"></presentation>
     <div class="app-control">
-      <slider :duration="duration"></slider>
+      <slider :minRange="minRange" :maxRange="maxRange" :duration="duration"></slider>
       <button class="app-control-start-button" @click="start">START</button>
     </div>
   </div>
@@ -20,6 +20,8 @@
     },
     data () {
       return {
+        minRange: 1,
+        maxRange: 30,
         duration: 5,
         scales: ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'B', 'Bb'],
         chords: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii'],
@@ -42,14 +44,12 @@
   .main {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     height: 100%;
     width: 100%;
   }
 
   .app-control {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     width: 100%;
 
     &-start-button {
