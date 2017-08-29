@@ -55,7 +55,6 @@ if (production) {
     }),
     new workboxPlugin({
       globDirectory: 'dist',
-      globPatterns: ['*.{html, js, css}'],
       swDest: 'dist/sw.js'
     })
   );
