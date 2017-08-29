@@ -29,7 +29,6 @@ export default {
     onSwipeStart(evt) {
       evt.preventDefault();
       this.dragging = true;
-      this.startX = evt.pageX || evt.touches[0].pageX;
     },
 
     onSwipeMove(evt) {
@@ -38,19 +37,24 @@ export default {
       }
 
       this.currentX = evt.pageX || evt.touches[0].pageX;
-      const delta = this.currentX - this.startX;
-      console.log(delta);
-
-      if (Math.abs(delta) < 0 || Math.abs(delta) > this.sliderInputBCR.width - 10) {
-        this.dragging = false;
-        return;
-      }
-
-      this.sliderController.style.transform = `translate(${delta}px, -50%)`
     },
 
     onSwipeEnd(evt) {
       this.dragging = false;
+    },
+
+    update() {
+      requestAnimationFrame(this.update);
+
+      if (!this.sliderController) {
+        return;
+      }
+
+      if (this.currentX < 0 || this.currentX > this.sliderInputBCR.width - 10) {
+        return;
+      }
+
+      this.sliderController.style.transform = `translate(${this.currentX}px, -50%)`;
     }
   },
   mounted() {
@@ -66,6 +70,7 @@ export default {
     window.addEventListener('resize', this.onResize);
 
     this.onResize();
+    requestAnimationFrame(this.update);
   },
   destroyed() {
     this.sliderController.removeEventListener('mousestart', this.onSwipeStart);
