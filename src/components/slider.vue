@@ -1,7 +1,7 @@
 <template>
   <div class="slider">
     <div class="slider-time-between">
-      <span>Time between : <span class="slider-time-between__value">{{currentX ? currentDuration: duration}}s</span></span>
+      <span>Time between : <span class="slider-time-between__value">{{duration}}s</span></span>
     </div>
     <div class="slider-input">
       <div class="slider-controller"></div>
@@ -27,9 +27,7 @@ export default {
     }
   },
   computed: {
-    currentDuration() {
-      return Math.floor(this.currentX / this.partsWidth) + 1;
-    }
+
   },
   methods: {
     onResize() {
@@ -61,6 +59,10 @@ export default {
       this.dragging = false;
     },
 
+    calculateDurationFromPosition() {
+      this.$parent.duration = Math.floor(this.currentX / this.partsWidth) + 1;
+    },
+
     update() {
       requestAnimationFrame(this.update);
 
@@ -71,6 +73,8 @@ export default {
       if (!this.dragging) {
         return;
       }
+
+      this.calculateDurationFromPosition();
 
       this.sliderController.style.transform = `translate(${this.currentX}px, -50%)`;
     }
@@ -108,7 +112,7 @@ export default {
   .slider {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
 
     &-time-between {

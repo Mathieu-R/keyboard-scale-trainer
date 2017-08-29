@@ -6,6 +6,7 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const autoprefixer = require('autoprefixer');
+const workboxPlugin = require('workbox-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractSass = new ExtractTextPlugin({
     filename: '[name].[contenthash].css'
@@ -51,6 +52,11 @@ if (production) {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new MinifyPlugin({}, {
       comments: false
+    }),
+    new workboxPlugin({
+      globDirectory: 'dist',
+      globPatterns: ['*.{html, js, css}'],
+      swDest: 'dist/sw.js'
     })
   );
 } else {
