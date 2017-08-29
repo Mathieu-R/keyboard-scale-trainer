@@ -26,26 +26,49 @@ export default {
   },
   methods: {
     onScaleEnter(el, done) {
+      // First
       const first = el.getBoundingClientRect();
 
+      // Last
+      el.classList.remove('presentation--scale__animatable');
       el.style.position = 'fixed';
-      el.style.top = '5px';
-      el.style.right = '5px';
+      el.style.top = '-32px';
+      el.style.left = '-10px';
+      el.style.right = 'auto';
+      el.style.bottom = 'auto';
       el.style.transform = 'scale(0.5)';
       const last = el.getBoundingClientRect();
 
+      // Invert
       const deltaX = first.right - last.right;
       const deltaY = first.top - last.top;
       const deltaScale = first.width / last.width;
 
-      el.style.transform = `scale(0.5, 0.5) translate(${-left + 5}px, ${-top + 5}px)`;
-      el.style.opacity = 0.7;
+      // Play
+      el.style.transform = `scale(${deltaScale}) scale(0.5) translate(${deltaX}px, ${deltaY}px)`;
+
+      // double rAF
+      requestAnimationFrame(_ => {
+        requestAnimationFrame(_ => {
+          el.classList.add('presentation--scale__animatable');
+          requestAnimationFrame(_ => {
+            el.style.transform = 'scale(0.5)';
+            el.style.opacity = 0.5;
+            el.addEventListener('transitionend', this.onTransitionEnd);
+          });
+        });
+      });
       done();
     },
 
     onScaleLeave(el, done) {
       el.style.opacity = 0;
       done();
+    },
+
+    onTransitionEnd(evt) {
+      evt.target.removeEventListener('transitionend', this.onTransitionEnd);
+      evt.target.classList.remove('presentation--scale__animatable');
     }
   }
 }
@@ -63,6 +86,9 @@ export default {
       color: #FFF;
       opacity: 1;
       font-size: 8em;
+    }
+
+    &--scale__animatable {
       transition:
         opacity 0.3s cubic-bezier(0, 0, 0.3, 1),
         transform 1s cubic-bezier(0, 0, 0.3, 1);

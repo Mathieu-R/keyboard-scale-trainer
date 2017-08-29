@@ -97,7 +97,7 @@ export default {
   destroyed() {
     this.sliderController.removeEventListener('mousestart', this.onSwipeStart);
     this.sliderController.removeEventListener('mousemove', this.onSwipeMove);
-    this.sliderController.removeEventListener('mouseend', this.onSwipeEnd);
+    this.sliderController.removeEventListener('mouseup', this.onSwipeEnd);
 
     this.sliderController.removeEventListener('touchstart', this.onSwipeStart);
     this.sliderController.removeEventListener('touchmove', this.onSwipeMove);
