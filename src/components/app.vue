@@ -3,6 +3,7 @@
     <presentation
       :scale="currentScale"
       :shouldShowScale="shouldShowScale"
+      :shouldShowChords="shouldShowChords"
       :duration="duration"
       :chordsTypes="chordsTypes"
       :chords="chords"
@@ -11,7 +12,7 @@
     </presentation>
     <div class="app-control">
       <slider :minRange="minRange" :maxRange="maxRange" :duration="duration"></slider>
-      <button class="app-control-start-button" @click="start">START</button>
+      <button class="app-control-start-button" @click="start">Give me a key</button>
     </div>
   </div>
 </template>
@@ -46,7 +47,9 @@
           'augmented': ['augmented']
         },
         currentScale: '',
-        shouldShowScale: false
+        shouldShowScale: false,
+        shouldShowChords: false,
+        tids: []
       }
     },
     methods: {
@@ -55,13 +58,37 @@
       },
 
       start() {
-        this.shouldShowScale = false;
-        this.$el.querySelector('.presentation--scale').removeAttribute('style');
-        const scale = this.scales[this.generateRandomNumber(0, this.scales.length - 1)];
-        this.currentScale = scale;
-        this.shouldShowScale = true;
+        this.forceStopShowingChordsIfNeeded().then(_ => {
+          // remove all styles applied with FLIP
+          this.$el.querySelector('.presentation--scale').removeAttribute('style');
+          const scale = this.scales[this.generateRandomNumber(0, this.scales.length - 1)];
+          this.currentScale = scale;
+          this.shouldShowScale = true;
+        });
+      },
 
-        //setTimeout(_ => this.showChords(20), this.duration * 1000);
+      forceStopShowingChordsIfNeeded() {
+        return new Promise((resolve, reject) => {
+          const onChordTransitionEnd = evt => {
+            this.shouldShowScale = false;
+            // remove all styles applied with FLIP
+            this.$el.querySelector('.presentation--scale').removeAttribute('style');
+            // clear all the timeouts so no chords are shown
+            this.tids.forEach(tid => clearTimeout(tid));
+            // reset timeoutsids
+            this.tids = [];
+            evt.target.removeEventListener('animationend', onChordTransitionEnd);
+            resolve();
+          }
+
+          if (!this.shouldShowChords) {
+            resolve();
+            return;
+          }
+
+          this.shouldShowChords = false;
+          this.$el.querySelector('.presentation--fullchord').addEventListener('animationend', onChordTransitionEnd);
+        });
       }
     }
   }
