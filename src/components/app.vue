@@ -2,11 +2,11 @@
   <div class="main">
     <presentation
       :scale="currentScale"
-      :chord="currentChord"
-      :alteration="currentAlteration"
-      :showScale="shouldShowScale"
-      :showChords="shouldShowChords"
+      :shouldShowScale="shouldShowScale"
       :duration="duration"
+      :chordsTypes="chordsTypes"
+      :chords="chords"
+      :alterations="alterations"
     >
     </presentation>
     <div class="app-control">
@@ -46,10 +46,7 @@
           'augmented': ['augmented']
         },
         currentScale: '',
-        currentChord: '',
-        currentAlteration: '',
-        shouldShowScale: false,
-        shouldShowChords: false
+        shouldShowScale: false
       }
     },
     methods: {
@@ -59,26 +56,12 @@
 
       start() {
         this.shouldShowScale = false;
+        this.$el.querySelector('.presentation--scale').removeAttribute('style');
         const scale = this.scales[this.generateRandomNumber(0, this.scales.length - 1)];
         this.currentScale = scale;
         this.shouldShowScale = true;
 
-        setTimeout(_ => this.showChords(20), this.duration * 1000);
-      },
-
-      showChords(numberOfChords) {
-        this.shouldShowChords = true;
-        for (let i = 0; i < numberOfChords; i++) {
-          setTimeout(_ => {
-            const randomChordType = this.chordsTypes[this.generateRandomNumber(0, this.chordsTypes.length - 1)];
-            const randomChord = this.chords[randomChordType][this.generateRandomNumber(0, this.chords[randomChordType].length - 1)];
-            const randomAlterationForTheChord = this.alterations[randomChordType][this.generateRandomNumber(0, this.alterations[randomChordType].length - 1)];
-
-            this.currentChord = randomChord;
-            this.currentAlteration = (randomAlterationForTheChord === 'straight') ? '' : randomAlterationForTheChord;
-          }, (this.duration * 1000) * (i + 1));
-        }
-        //this.shouldShowScale = false;
+        //setTimeout(_ => this.showChords(20), this.duration * 1000);
       }
     }
   }

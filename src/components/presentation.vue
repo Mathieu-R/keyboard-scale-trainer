@@ -1,13 +1,10 @@
 <template>
   <div class="presentation">
-    <transition
-      @enter="onScaleEnter"
-      @leave="onScaleLeave"
-    >
-      <div class="presentation--scale" v-show="showScale">{{scale}}</div>
+    <transition name="fade">
+      <div class="presentation--scale" v-show="shouldShowScale" @click="onScaleClick">{{scale}}</div>
     </transition>
     <transition name="fade">
-      <div class="presentation--fullchord" v-show="showChords">
+      <div class="presentation--fullchord" v-show="shouldShowChords">
         <span class="presentation--chord">{{chord}}</span>
         <span class="presentation--alteration">{{alteration}}</span>
       </div>
@@ -18,14 +15,28 @@
 <script>
 export default {
   props: {
-    showScale: Boolean,
-    showChords: Boolean,
+    shouldShowScale: Boolean,
     scale: String,
-    chord: String,
-    alteration: String
+    chordsTypes: Array,
+    chords: Object,
+    alterations: Object
+  },
+  data () {
+    return {
+      chord: '',
+      alteration: '',
+      shouldShowChords: false,
+      numberOfChordsToShow: 20
+    }
   },
   methods: {
-    onScaleEnter(el, done) {
+    generateRandomNumber(min, max) {
+      return Math.floor(Math.random() * max) + min;
+    },
+
+    onScaleClick(evt) {
+      const el = evt.target;
+
       // First
       const first = el.getBoundingClientRect();
 
@@ -33,7 +44,7 @@ export default {
       el.classList.remove('presentation--scale__animatable');
       el.style.position = 'fixed';
       el.style.top = '-32px';
-      el.style.left = '-10px';
+      el.style.left = '-25px';
       el.style.right = 'auto';
       el.style.bottom = 'auto';
       el.style.transform = 'scale(0.5)';
@@ -58,17 +69,27 @@ export default {
           });
         });
       });
-      done();
-    },
-
-    onScaleLeave(el, done) {
-      el.style.opacity = 0;
-      done();
     },
 
     onTransitionEnd(evt) {
       evt.target.removeEventListener('transitionend', this.onTransitionEnd);
       evt.target.classList.remove('presentation--scale__animatable');
+      this.showChords(this.numberOfChordsToShow);
+    },
+
+    showChords(numberOfChords) {
+      this.shouldShowChords = true;
+      for (let i = 0; i < numberOfChords; i++) {
+        setTimeout(_ => {
+          const randomChordType = this.chordsTypes[this.generateRandomNumber(0, this.chordsTypes.length - 1)];
+          const randomChord = this.chords[randomChordType][this.generateRandomNumber(0, this.chords[randomChordType].length - 1)];
+          const randomAlterationForTheChord = this.alterations[randomChordType][this.generateRandomNumber(0, this.alterations[randomChordType].length - 1)];
+
+          this.chord = randomChord;
+          this.alteration = (randomAlterationForTheChord === 'straight') ? '' : randomAlterationForTheChord;
+        }, (this.duration * 1000) * (i + 1));
+      }
+      //this.shouldShowScale = false;
     }
   }
 }
