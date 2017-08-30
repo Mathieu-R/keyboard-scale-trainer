@@ -119,6 +119,8 @@ export default {
       color: #FFF;
       opacity: 1;
       font-size: 8em;
+      /* avoid problem with scale when flip */
+      transform-origin: 0% 0%;
       will-change: transform, opacity;
     }
 
