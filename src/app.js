@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import App from './components/app';
 
-new Vue({
-  el: '.app',
+export const app = new Vue({
   render: h => h(App)
 });
 

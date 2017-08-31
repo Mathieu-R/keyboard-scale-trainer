@@ -5,9 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "patch": "npm version bump",
-    "watch": "webpack-dev-server --config webpack.config.js",
-    "build": "rm -rf ./dist && npm run build:client",
-    "build:client": "NODE_ENV=production webpack --config webpack.config.js -p --progress",
+    "start": "node build/server.js",
+    "server:prod": "NODE_ENV=production node build/server.js",
+    "build": "rm -rf ./dist && npm run build:client && npm run build:server",
+    "build:client": "NODE_ENV=production webpack --config build/webpack.config.client.js -p --progress",
+    "build:server": "NODE_ENV=production webpack --config build/webpack.config.server.js -p --progress",
     "webpack-defaults": "webpack-defaults"
   },
   "repository": {
@@ -46,9 +48,13 @@
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
     "vue-loader": "^13.0.4",
+    "vue-server-renderer": "^2.4.2",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.5.4",
     "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.7.1"
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-dev-server": "^2.7.1",
+    "webpack-hot-middleware": "^2.18.2",
+    "webpack-merge": "^4.1.0"
   }
 }

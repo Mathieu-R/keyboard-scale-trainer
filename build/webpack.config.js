@@ -12,36 +12,10 @@ const extractSass = new ExtractTextPlugin({
     filename: '[name].[contenthash].css'
 });
 
-const plugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'common'
-  })
-];
-
-const devServer = {
-  contentBase: config.contentBase,
-  hot: true,
-  hotOnly: true,
-  historyApiFallback: true,
-  port: config.port.front,
-  compress: production,
-  inline: !production,
-  hot: !production,
-  stats: {
-    assets: true,
-    children: false,
-    chunks: false,
-    hash: true,
-    modules: false,
-    publicPath: false,
-    timings: true,
-    version: false,
-    warnings: true
-  }
-}
+let plugins;
 
 if (production) {
-  plugins.push(
+  plugins = [
     extractSass,
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.DefinePlugin({
@@ -52,22 +26,12 @@ if (production) {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new MinifyPlugin({}, {
       comments: false
-    }),
-    new workboxPlugin({
-      globDirectory: 'dist',
-      swDest: 'dist/sw.js'
     })
-  );
+  ];
 } else {
-  plugins.push(
-    new webpack.HotModuleReplacementPlugin(), // hot reload
-    new webpack.NoEmitOnErrorsPlugin(), // do not build bundle if they have errors
-    new webpack.NamedModulesPlugin(), // print more readable module names in console on HMR,
-    new htmlWebpackPlugin({ // generate index.html
-      template: config.template,
-    })
-    //new BundleAnalyzerPlugin(), // analyse the bundles and their contents
-  );
+  plugins = [
+    new webpack.NamedModulesPlugin() // print more readable module names in console on HMR,
+  ];
 };
 
 
@@ -80,7 +44,7 @@ const common = {
   output: {
     path: path.resolve('dist'),
     filename: production ? '[name].bundle.[hash].js' : '[name].bundle.js',
-    publicPath: '/'
+    publicPath: '/dist/'
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -98,12 +62,12 @@ const common = {
           extractCSS: production,
           postcss: [
             autoprefixer({browsers: ['last 3 versions']})
-          ]
+          ],
+          optimizeSSR: true
         }
       },{
         test: /\.js$/,
         exclude: /node_modules/,
-        include: path.resolve(__dirname, "src"),
         loader: 'babel-loader'
       }
     ]
@@ -111,8 +75,7 @@ const common = {
   performance: {
     hints: production ? 'warning' : false
   },
-  plugins,
-  devServer
+  plugins
 };
 
 module.exports = common;
