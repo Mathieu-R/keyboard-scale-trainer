@@ -1,6 +1,6 @@
 {
   "name": "keyboard-scale-trainer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "train your scale and your chords on your keyboard with this amazing companion app",
   "main": "src/index.js",
   "engines": {
