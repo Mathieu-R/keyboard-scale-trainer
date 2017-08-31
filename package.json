@@ -11,7 +11,8 @@
     "build:client": "NODE_ENV=production webpack --config build/webpack.config.client.js -p --progress",
     "build:server": "NODE_ENV=production webpack --config build/webpack.config.server.js -p --progress",
     "webpack-defaults": "webpack-defaults",
-    "postinstall": "npm install && npm run build"
+    "postinstall": "npm install && npm run build",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
