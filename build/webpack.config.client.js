@@ -31,6 +31,12 @@ if (production) {
       filename: 'sw.js',
       minify: true,
       staticFileGlobsIgnorePatterns: [/\.map$/],
+      runtimeCaching: [
+        {
+          urlPattern: '/',
+          handler: 'networkFirst'
+        }
+      ]
     })
   );
 }
