@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const config = require('./config.js');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.config.js');
-const workboxPlugin = require('workbox-webpack-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const production = process.env.NODE_ENV === 'production';
 
@@ -25,8 +25,12 @@ const client = merge(baseConfig, {
 
 if (production) {
   client.plugins.push(
-    new workboxPlugin({
-
+      new SWPrecacheWebpackPlugin({
+      cacheId: 'keyboard-scale-trainer',
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
+      filename: 'sw.js',
+      minify: true,
+      staticFileGlobsIgnorePatterns: [/\.map$/],
     })
   );
 }
