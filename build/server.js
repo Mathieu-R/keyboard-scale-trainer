@@ -1,7 +1,9 @@
 const http = require('http');
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const compression = require('compression');
+const favicon = require('serve-favicon');
 const {createBundleRenderer} = require('vue-server-renderer');
 const serverBundleJSON = require('../dist/vue-ssr-server-bundle.json');
 const clientManifestJSON = require('../dist/vue-ssr-client-manifest.json');
@@ -10,9 +12,15 @@ const app = express();
 const production = process.env.NODE_ENV === 'production';
 const devServer = require('./dev-server');
 
-app.use('/dist', express.static('./dist', {
-  maxAge: production ? 31536000000 : 0
-}));
+const serve = (path, tocache) => express.static(path.resolve(__dirname, path), {
+  maxAge: (tocache && production) ? 31536000000 : 0
+});
+
+app.use('/sw.js', serve('../dist/sw.js', false));
+app.use('/dist', serve('../dist', true));
+app.use('/manifest.json', serve('../manifest.json', true));
+app.use('/icons', serve('../src/icons', true));
+app.use(favicon(path.resolve(__dirname, '../src/icons/icon-72x72.png')));
 
 app.use(compression());
 
@@ -50,6 +58,6 @@ app.get('*', production ? doSSR : (req, res) => {
   ready.then(_ => doSSR(req, res));
 });
 
-http.createServer(app).listen(2000, _ => {
-  console.log('listening on http://localhost:2000');
+http.createServer(app).listen(8080, _ => {
+  console.log('listening on http://localhost:8080');
 });

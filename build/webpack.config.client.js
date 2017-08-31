@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const config = require('./config.js');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.config.js');
+const workboxPlugin = require('workbox-webpack-plugin');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const production = process.env.NODE_ENV === 'production';
 

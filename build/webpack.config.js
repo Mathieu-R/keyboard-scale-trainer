@@ -6,7 +6,6 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const autoprefixer = require('autoprefixer');
-const workboxPlugin = require('workbox-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractSass = new ExtractTextPlugin({
     filename: '[name].[contenthash].css'
@@ -37,12 +36,8 @@ if (production) {
 
 const common = {
   devtool: config.devtool,
-  entry: {
-    app: config.entry.front,
-    vendor: config.vendor
-  },
   output: {
-    path: path.resolve('dist'),
+    path: path.resolve(__dirname, '../dist'),
     filename: production ? '[name].bundle.[hash].js' : '[name].bundle.js',
     publicPath: '/dist/'
   },

@@ -33,7 +33,7 @@ module.exports = function devServer(app, cb) {
 
   clientCompiler.plugin('done', stats => {
     clientManifestJSON = JSON.parse(fs.readFileSync(
-      '../dist/vue-ssr-client-manifest.json', 'utf-8'
+      './dist/vue-ssr-client-manifest.json', 'utf-8'
     ));
 
     if (serverBundleJSON) {
@@ -52,7 +52,7 @@ module.exports = function devServer(app, cb) {
     if (err) throw err;
 
     serverBundleJSON = JSON.parse(fs.readFileSync(
-      '../dist/vue-ssr-server-bundle.json', 'utf-8'
+      './dist/vue-ssr-server-bundle.json', 'utf-8'
     ));
 
     if (clientManifestJSON) {
