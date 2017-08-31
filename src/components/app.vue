@@ -12,7 +12,10 @@
     </presentation>
     <div class="app-control">
       <slider :minRange="minRange" :maxRange="maxRange" :duration="duration"></slider>
-      <button class="app-control-start-button" @click="start">Give me a key</button>
+      <button class="app-control-start-button" @click="start">
+        <span>Give me a key</span>
+        <span class="app-control-start-button__little-text">then click on the chord</span>
+      </button>
     </div>
   </div>
 </template>
@@ -27,6 +30,7 @@
       slider
     },
     data () {
+    console.log('mounted')
       return {
         minRange: 1,
         maxRange: 30,
@@ -106,6 +110,10 @@
     width: 100%;
 
     &-start-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
       height: 60px;
       width: 100%;
       background: #92989b;
@@ -114,6 +122,11 @@
       color: #FFF;
       font-size: 22px;
       outline: none;
+
+      &__little-text {
+        font-size: 14px;
+        font-style: italic;
+      }
     }
   }
 </style>

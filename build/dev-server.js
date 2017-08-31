@@ -8,9 +8,9 @@ const serverConfig = require('./webpack.config.server.js');
 module.exports = function devServer(app, cb) {
   let resolve;
   const promise = new Promise(r => resolve = r);
-  const updateBundle = (options) => {
+  const updateBundle = (bundle, options) => {
     resolve();
-    cb(options);
+    cb(bundle, options);
   }
 
   clientConfig.entry.app.push('webpack-hot-middleware/client');

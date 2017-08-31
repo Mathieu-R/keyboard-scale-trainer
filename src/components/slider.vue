@@ -19,6 +19,7 @@ export default {
   },
   data() {
     return {
+      target: null,
       sliderController: null,
       dragging: false,
       currentX: null,
@@ -40,12 +41,22 @@ export default {
     },
 
     onSwipeStart(evt) {
-      evt.preventDefault();
+      if (this.target) {
+        return;
+      }
+
+      if (!evt.target.classList.contains('slider-controller')) {
+        return;
+      }
+
+      this.target = evt.target;
       this.dragging = true;
+
+      evt.preventDefault();
     },
 
     onSwipeMove(evt) {
-      if (!this.dragging) {
+      if (!this.target) {
         return;
       }
 
@@ -56,6 +67,11 @@ export default {
     },
 
     onSwipeEnd(evt) {
+      if (!this.target) {
+        return;
+      }
+
+      this.target = null;
       this.dragging = false;
     },
 
@@ -66,7 +82,7 @@ export default {
     update() {
       requestAnimationFrame(this.update);
 
-      if (!this.sliderController) {
+      if (!this.target) {
         return;
       }
 
@@ -82,26 +98,26 @@ export default {
   mounted() {
     this.sliderController = this.$el.querySelector('.slider-controller');
 
-    this.sliderController.addEventListener('mousedown', this.onSwipeStart);
-    this.sliderController.addEventListener('mousemove', this.onSwipeMove);
-    this.sliderController.addEventListener('mouseup', this.onSwipeEnd);
+    document.addEventListener('mousedown', this.onSwipeStart);
+    document.addEventListener('mousemove', this.onSwipeMove);
+    document.addEventListener('mouseup', this.onSwipeEnd);
 
-    this.sliderController.addEventListener('touchstart', this.onSwipeStart);
-    this.sliderController.addEventListener('touchmove', this.onSwipeMove);
-    this.sliderController.addEventListener('touchend', this.onSwipeEnd);
+    document.addEventListener('touchstart', this.onSwipeStart);
+    document.addEventListener('touchmove', this.onSwipeMove);
+    document.addEventListener('touchend', this.onSwipeEnd);
     window.addEventListener('resize', this.onResize);
 
     this.onResize();
     requestAnimationFrame(this.update);
   },
   destroyed() {
-    this.sliderController.removeEventListener('mousestart', this.onSwipeStart);
-    this.sliderController.removeEventListener('mousemove', this.onSwipeMove);
-    this.sliderController.removeEventListener('mouseup', this.onSwipeEnd);
+    document.removeEventListener('mousestart', this.onSwipeStart);
+    document.removeEventListener('mousemove', this.onSwipeMove);
+    document.removeEventListener('mouseup', this.onSwipeEnd);
 
-    this.sliderController.removeEventListener('touchstart', this.onSwipeStart);
-    this.sliderController.removeEventListener('touchmove', this.onSwipeMove);
-    this.sliderController.removeEventListener('touchend', this.onSwipeEnd);
+    document.removeEventListener('touchstart', this.onSwipeStart);
+    document.removeEventListener('touchmove', this.onSwipeMove);
+    document.removeEventListener('touchend', this.onSwipeEnd);
     window.removeEventListener('resize', this.onResize);
     this.sliderController = null;
   }

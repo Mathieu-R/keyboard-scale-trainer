@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import noSleep from 'nosleep.js';
+import NoSleep from 'nosleep.js';
 
 export default {
   props: {
@@ -29,7 +29,8 @@ export default {
     return {
       chord: '',
       alteration: '',
-      numberOfChordsToShow: 20
+      numberOfChordsToShow: 20,
+      noSleep: null
     }
   },
   methods: {
@@ -44,7 +45,7 @@ export default {
 
       // prevent mobile screen to sleep
       // during the game
-      noSleep.enable();
+      this.noSleep.enable();
 
       const el = evt.target;
 
@@ -103,13 +104,16 @@ export default {
             setTimeout(_ => {
               this.$parent.shouldShowChords = false;
               this.$parent.shouldShowScale = false;
-              noSleep.disable();
+              this.noSleep.disable();
             }, this.duration * 1000);
           }
         }, (this.duration * 1000) * (i));
         this.$parent.tids.push(tid);
       }
     }
+  },
+  mounted() {
+    this.noSleep = new NoSleep();
   }
 }
 </script>

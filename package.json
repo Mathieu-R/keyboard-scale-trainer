@@ -11,8 +11,8 @@
     "start": "node build/server.js",
     "server:prod": "NODE_ENV=production node build/server.js",
     "build": "rm -rf ./dist && npm run build:client && npm run build:server",
-    "build:client": "NODE_ENV=production webpack --config build/webpack.config.client.js -p --progress",
-    "build:server": "NODE_ENV=production webpack --config build/webpack.config.server.js -p --progress",
+    "build:client": "NODE_ENV=production webpack --config build/webpack.config.client.js --progress",
+    "build:server": "NODE_ENV=production webpack --config build/webpack.config.server.js --progress",
     "webpack-defaults": "webpack-defaults",
     "heroku-postbuild": "npm run build"
   },

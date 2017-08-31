@@ -5,8 +5,6 @@ const path = require('path');
 const compression = require('compression');
 const favicon = require('serve-favicon');
 const {createBundleRenderer} = require('vue-server-renderer');
-const serverBundleJSON = require('../dist/vue-ssr-server-bundle.json');
-const clientManifestJSON = require('../dist/vue-ssr-client-manifest.json');
 const template = fs.readFileSync('./src/index.html', 'utf-8');
 const app = express();
 const production = process.env.NODE_ENV === 'production';
@@ -45,8 +43,8 @@ function bundleRenderer(bundle, options) {
 let renderer;
 let ready;
 if (production) {
-  renderer = bundleRenderer(serverBundleJSON, {
-    clientManifest: clientManifestJSON
+  renderer = bundleRenderer(require('../dist/vue-ssr-server-bundle.json'), {
+    clientManifest: require('../dist/vue-ssr-client-manifest.json')
   });
 } else {
   // dev server
