@@ -16,6 +16,9 @@ const client = merge(baseConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common'
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest'
+    }),
     new VueSSRClientPlugin(),
   ]
 });
@@ -23,8 +26,7 @@ const client = merge(baseConfig, {
 if (production) {
   client.plugins.push(
     new workboxPlugin({
-      globDirectory: 'dist',
-      swDest: 'dist/sw.js'
+
     })
   );
 }

@@ -12,14 +12,14 @@ const app = express();
 const production = process.env.NODE_ENV === 'production';
 const devServer = require('./dev-server');
 
-const serve = (path, tocache) => express.static(path.resolve(__dirname, path), {
+const serve = (path, tocache) => express.static(path, {
   maxAge: (tocache && production) ? 31536000000 : 0
 });
 
-app.use('/sw.js', serve('../dist/sw.js', false));
-app.use('/dist', serve('../dist', true));
-app.use('/manifest.json', serve('../manifest.json', true));
-app.use('/icons', serve('../src/icons', true));
+app.use('/sw.js', serve('./dist/sw.js', false));
+app.use('/dist', serve('./dist', true));
+app.use('/manifest.json', serve('./manifest.json', true));
+app.use('/icons', serve('./src/icons', true));
 app.use(favicon(path.resolve(__dirname, '../src/icons/icon-72x72.png')));
 
 app.use(compression());

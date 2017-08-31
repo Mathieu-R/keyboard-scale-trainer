@@ -7,3 +7,4 @@ export default context => {
     resolve(app);
   });
 }
+
