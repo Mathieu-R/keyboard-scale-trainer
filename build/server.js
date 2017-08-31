@@ -11,6 +11,7 @@ const template = fs.readFileSync('./src/index.html', 'utf-8');
 const app = express();
 const production = process.env.NODE_ENV === 'production';
 const devServer = require('./dev-server');
+const PORT = process.env.PORT || 5000;
 
 const serve = (path, tocache) => express.static(path, {
   maxAge: (tocache && production) ? 31536000000 : 0
@@ -58,6 +59,6 @@ app.get('*', production ? doSSR : (req, res) => {
   ready.then(_ => doSSR(req, res));
 });
 
-http.createServer(app).listen(8080, _ => {
+http.createServer(app).listen(PORT, _ => {
   console.log('listening on http://localhost:8080');
 });
