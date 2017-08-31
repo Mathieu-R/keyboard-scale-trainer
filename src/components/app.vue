@@ -18,7 +18,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import presentation from './presentation';
   import slider from './slider';
 

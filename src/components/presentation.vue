@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import noSleep from 'nosleep.js';
+
 export default {
   props: {
     duration: Number,
@@ -39,6 +41,10 @@ export default {
       if (this.shouldShowChords) {
         return;
       }
+
+      // prevent mobile screen to sleep
+      // during the game
+      noSleep.enable();
 
       const el = evt.target;
 
@@ -97,6 +103,7 @@ export default {
             setTimeout(_ => {
               this.$parent.shouldShowChords = false;
               this.$parent.shouldShowScale = false;
+              noSleep.disable();
             }, this.duration * 1000);
           }
         }, (this.duration * 1000) * (i));
