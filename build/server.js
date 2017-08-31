@@ -60,5 +60,5 @@ app.get('*', production ? doSSR : (req, res) => {
 });
 
 http.createServer(app).listen(PORT, _ => {
-  console.log('listening on http://localhost:8080');
+  console.log(`listening on http://localhost:PORT`);
 });
